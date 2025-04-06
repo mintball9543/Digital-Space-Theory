@@ -1,4 +1,4 @@
-import os
+import os, sys
 from math import sqrt
 import tkinter as tk
 from tkinter import messagebox
@@ -50,10 +50,14 @@ class Matrix:
 
 
 # input data
-working_dir = os.path.dirname(__file__)
+if getattr(sys, 'frozen', False):   # pyinstaller로 빌드된 경우 임시 디렉토리를 가리키는 것을 방지
+    working_dir = os.path.dirname(sys.executable)
+else:
+    working_dir = os.path.dirname(__file__)
 input_path = os.path.join(working_dir, "input.txt")
 output_path = os.path.join(working_dir, "output_20202689.txt")
 
+print("Input file path:", input_path)
 try:
     f = open(input_path, 'r')
 
@@ -131,7 +135,7 @@ elif data[0] == "matrix":
         for i in range(row_b):
             b.append(list(map(float, data[4+row_a+i].split())))
 
-        print("!!!!!!!!!!!", a, b)
+        # print("!!!!!!!!!!!", a, b)
         
         result.append('matrix\n')
         
@@ -149,8 +153,14 @@ elif data[0] == "matrix":
         a = []
         for i in range(row):
             a.append(list(map(float, data[3+i].split())))
+        print("!!!!!!!!!!!", a)
         result.append('matrix\n')
-        result.append(Matrix().trans(a))
+        result.append(f"{len(a[0])}   {len(a)}\n")
+        a = Matrix().trans(a)
+        print("!!!!!!!!!!!2222222222", a)
+        for i in range(len(a)):
+            result.append("   ".join(map(str,a[i])))
+            result.append("\n")
 
     else:
         result = "Invalid input"
